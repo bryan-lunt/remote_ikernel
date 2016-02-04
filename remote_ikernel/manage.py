@@ -234,7 +234,7 @@ def manage():
                         "running through an SSH connection. For non standard "
                         "ports use host:port.")
     parser.add_argument('--interface', '-i',
-                        choices=['local', 'ssh', 'pbs', 'sge', 'slurm'],
+                        choices=['local', 'ssh', 'pbs', 'sge', 'slurm', 'htcondor'],
                         help="Specify how the remote kernel is launched.")
     parser.add_argument('--system', help="Install the kernel into the system "
                         "directory so that it is available for all users. "

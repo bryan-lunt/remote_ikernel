@@ -311,10 +311,10 @@ class RemoteIKernel(object):
         job_name = 'remote_ikernel'
 
         append_commands = list()
-        append_commands.append('-append "JobDescription=%s"'.format(job_name))
+        append_commands.append('-append "JobDescription={0}"'.format(job_name))
 
         if self.cpus > 1:
-            append_commands.append('-append "request_cpus=%s"'.format(cpus=self.cpus))
+            append_commands.append('-append "request_cpus={cpus}"'.format(cpus=self.cpus))
 
         if self.launch_args:
             args_string = self.launch_args
@@ -322,15 +322,16 @@ class RemoteIKernel(object):
             args_string = ''
 
         all_append_commands = ' '.join(append_commands)
-        ht_cmd = 'condor_submit {1} -interactive {2}'.format(all_append_commands,
+        ht_cmd = 'condor_submit {0} -interactive {1}'.format(all_append_commands,
                                                         args_string)
         self.log.debug("HTCondor command: '{0}'.".format(ht_cmd))
         # Will wait in the queue for up to 10 mins
         qlogin = self._spawn(ht_cmd)
         # Hopefully this text is universal?
-        qlogin.expect('Establishing builtin session to host (.*) ...')
+        qlogin.expect('Welcome to (.*)!')
 
-        node = qlogin.match.groups()[0]
+        node = qlogin.match.groups()[0].split("@")[1]
+
         self.log.info("Established session on node: {0}.".format(node))
         self.host = node
 
